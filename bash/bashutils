@@ -1,0 +1,105 @@
+#!/bin/bash
+
+cls2() {
+  osascript -e 'tell application "System Events" to keystroke "k" using command down' 
+}
+
+cls3() {
+  clear && echo -en "\e[3J" 
+  tput reset
+  reset 
+  echo -e \\033c
+}
+
+clsh() {
+  history -c
+  history -w
+}
+
+
+byLine() {
+  while read -r line; do
+    echo ${@:2} $line;
+  done < $1
+}
+
+ 
+patchBrokenKey() { xmodmap -e "keycode 133 = u"; }
+
+echoerr() { echo "$@" 1>&2; }
+
+tag() { echo "$(date | sed 's| |.|g' | sed 's|:|.|g')-$(hostname)";  }
+
+retag() { echo $1 | ruby -e "while t = gets do puts (t.split('.')[0..-2] + [\"$tag\", t.split('.')[-1]]).join('.') ; end" ; }
+
+stamp() { echo "$HOSTNAME [$(date)]" ; }
+
+library() { echo $(basename $1) | awk -F\. '{print $1}' ; }
+
+datetag() { echo "$HOSTNAME [$(date)]"| sed 's/\ /./g' | sed 's/:/./g' ; }
+
+cls() {
+  clear
+  echo -e "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" ;
+}
+
+
+backThis() {
+  for f in $@
+  do
+    tag="$(date | sed 's/:/-/g;s/ /-/g')" ; 
+    target=$f ;
+    backupDir="$(dirname $target)"/backups ;
+    mkdir $backupDir &> /dev/null  ;
+    echo "cp $f $backupDir/$(basename $f).$tag"  ;
+    cp $f $backupDir/$(basename $f).$tag ;
+    echo "bak2 $f finished with return: $?" ;
+  done
+}
+
+teed() {
+  tag=$(echo $HOSTNAME:$(date) | sed 's|:|.|g' | sed 's| |.|g') ;
+  loghome=$(dirname $1)/logs ;
+  tlog=$(dirname $1)/logs/$(basename $1).$tag.log ;
+  mkdir $loghome || true ;
+  echo "$@ 2>&1 | tee -a $tlog" | tee -a $tlog ;
+  echo "#--------------------------------------" | tee -a $tlog ; 
+  $@ 2>&1 | tee -a $tlog 
+  echo "#--------------------------------------" | tee -a $tlog ;
+  echo "return:$? $@" | tee -a $tlog ;
+  echo "log: $tlog" ;
+  chmod ugo-w $tlog ;
+}
+
+catlm() {
+  cls;
+  LM=$(ls -tr | tail -1);
+  MSG="last modified: $(ls -ltr $LM)";
+  echoerr "## $MSG";
+  cat $LM;
+  echoerr "## $MSG";
+}
+
+
+nohupf() {
+  TAG=$(tag);
+  CMD_W_ARGS=$@ ;
+  LOG="$1.$TAG.nohup.out" ;
+  backup $LOG ;
+  stamp >> $LOG ;
+  echo "nohup starting: $CMD_W_ARGS : $LOG" >> $LOG ;
+  nohup $CMD_W_ARGS >> $LOG 2>&1 & 
+  read bgid exit_code <<<$(echo $! $?) ; 
+  echo "nohup[ return:$exit_code process:$bgid ]" >> $LOG ;
+  echo "nohup[ return:$exit_code process:$bgid ]" ;
+}
+
+xargsf() {
+  cat $1 | xargs -I target -P $3 $2 target ;
+  echo "return:$?" ;
+}
+
+
+
+
+

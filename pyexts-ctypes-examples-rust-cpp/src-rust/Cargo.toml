@@ -1,0 +1,12 @@
+[package]
+name = "examples extending python with ctypes, rust and cpp"
+version = "0.1.0"
+authors = ["https://github.com/sitag"]
+
+[dependencies]
+libc = "0.2.0"
+serde_json = "0.7.0"
+
+[lib]
+name = "rs"
+crate-type = ["dylib"]  
