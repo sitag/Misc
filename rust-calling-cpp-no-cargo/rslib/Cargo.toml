@@ -1,0 +1,11 @@
+[package]
+name = "rslibtest"
+version = "0.1.0"
+authors = ["https://github.com/sitag"]
+
+
+[lib]
+name = "rslibtest"
+crate-type = ["staticlib"]
+
+[dependencies]
