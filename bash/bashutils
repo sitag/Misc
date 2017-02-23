@@ -1,5 +1,39 @@
 #!/bin/bash
 
+## set -eufx -o pipefail
+
+getUrl(){
+  which wget
+  WGET_FOUND=$?
+  which curl
+  CURL_FOUND=$?
+  CURL_OPTS=""
+  WGET_OPTS=""
+  if [ $# == "1" ]; then 
+    SOURCE=$1
+    TARGET=./$(echo $(basename $1) | sed 's|\ |_|g')
+    echo
+  else
+    SOURCE=$1
+    TARGET=$2
+  fi
+  if [[ -f $TARGET  ]]; then 
+    echo "$TARGET exists";
+    exit 1
+  elif [[ $WGET_FOUND == 0 ]]; then
+    echo "#wget... "
+    wget $WGET_OPTS $SOURCE -O $TARGET
+    echo "return:$? $TARGET $SOURCE"
+  else
+    echo "#curl... "
+    curl $CURL_OPTS $SOURCE > $TARGET
+    echo "return:$? $TARGET $SOURCE"
+  fi
+  echo "$SOURCE $TARGET" >> from
+}
+
+
+
 cls2() {
   osascript -e 'tell application "System Events" to keystroke "k" using command down' 
 }
