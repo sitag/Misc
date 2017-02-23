@@ -8,7 +8,7 @@ hold_for() {
   return 0
 }
 
-getUrl(){
+get_url(){
   which wget
   WGET_FOUND=$?
   which curl
@@ -57,14 +57,15 @@ clsh() {
 }
 
 
-byLine() {
+by_line() {
   while read -r line; do
-    echo ${@:2} $line;
+    echo "on: ${@:2} $line";
+    ${@:2} $line
   done < $1
 }
 
  
-patchBrokenKey() { xmodmap -e "keycode 133 = u"; }
+patch_broken_key() { xmodmap -e "keycode 133 = u"; }
 
 echoerr() { echo "$@" 1>&2; }
 
@@ -84,7 +85,7 @@ cls() {
 }
 
 
-backThis() {
+backthis() {
   for f in $@
   do
     tag="$(date | sed 's/:/-/g;s/ /-/g')" ; 
