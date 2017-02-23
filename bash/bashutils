@@ -2,6 +2,12 @@
 
 ## set -eufx -o pipefail
 
+hold_for() {
+  printf "$@.."
+  read -r line 
+  return 0
+}
+
 getUrl(){
   which wget
   WGET_FOUND=$?
