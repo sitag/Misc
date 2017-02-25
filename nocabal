@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# cabal and ghc binary packages for centos 6 don't play well when built from source without root
+nocabal() {
+	H=$PWD
+	T=$(basename $1 .tar.gz)
+	INSTALL_DIR="$H"/lib_nocabal
+	wget $1 &> /dev/null
+	echo "return:$? wget"
+	tar xvzf $T.tar.gz > /dev/null
+	echo "return:$? tar xvzf $T.tar.gz"
+	cd $T
+	runghc Setup.*hs configure --prefix=$INSTALL_DIR
+	echo "$? cd $T; runghc Setup.*hs configure --prefix=$INSTALL_DIR" 
+	runghc Setup.*hs build
+	echo "$? runghc Setup.*hs build"
+	runghc Setup.*hs install
+	echo "$? runghc Setup.*hs install"
+	cd -
+}
