@@ -30,7 +30,7 @@ object Utils {
 
 object DefaultLayout {
   def background = {
-    val i = new Insets(1, 1, 1, 1)
+    val insets = new Insets(1, 1, 1, 1)
     new javafx.scene.layout.Background(
       new javafx.scene.layout.BackgroundFill(
         javafx.scene.paint.Color.rgb(72,72,72) , 
