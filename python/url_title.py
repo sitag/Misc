@@ -17,5 +17,5 @@ class TitleUrl:
 		return self.soup.title.text
 import sys
 for arg in sys.argv[1:]:
-	r = TitleUrl(arg)
+	r = TitleUrl(arg) 
 	print "'{0}'\t{1}".format(r.title(), r.url)
