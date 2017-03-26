@@ -1,6 +1,13 @@
-import requests
-from bs4 import BeautifulSoup
+#!/bin/env python
+import sys
 
+try:
+	import requests
+	from bs4 import BeautifulSoup
+except:
+	print 'need requests+bs4'
+	sys.exit(1)
+	
 class TitleUrl:
 	def eval(self):
 		if not self.evaluated:
@@ -15,7 +22,11 @@ class TitleUrl:
 	def title(self):
 		self.eval()
 		return self.soup.title.text
-import sys
-for arg in sys.argv[1:]:
-	r = TitleUrl(arg) 
-	print "'{0}'\t{1}".format(r.title(), r.url)
+
+def main(args):
+	for arg in args:
+		r = TitleUrl(arg)
+		print "'{0}'\t{1}".format(r.title(), r.url)
+
+if __name__ == '__main__':
+	main(sys.argv[1:])
